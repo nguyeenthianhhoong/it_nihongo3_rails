@@ -1,58 +1,44 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  
-  <div class="field">
-     <%= f.label :name %><br />
-     <%= f.text_field :name %>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="card mb-3">
+        <h3 class="card-header">本詳細</h3>
+        <div class="card-body">
+          <h5 class="card-title"><%= @book.title %></h5>
+          <h6 class="card-subtitle text-muted">ページ数：<%= @book.number_of_pages %></h6>
+  　　　　</div>
+  　　　　<% if @book.image.attached? %>
+          <%= image_tag @book.image, class: "card-img" %>
+        <% end %>
+        <div class="card-body">
+          <p class="card-text"><%= @book.detail %></p>
+        </div>
+      </div>
+    </div>
+  <div class="col-sm-4">
+    <div class="card bg-light mb-3" style="max-width: 40rem;">
+      <div class="card-header">レビュー</div>
+      <div class="card-body">
+        <ul>
+          <% @book.book_review.each do |book_review|%>
+          　<div class="card border-light mb-3" style="max-width: 20rem;">
+              <div class="card-header"><%= book_review.user.name %></div>
+              <div class="card-body">
+                <p class="card-text"><%= book_review.review %></p>
+              </div>
+            </div>
+          <% end %>
+        </ul>
+      <%= form_with(model: @book_review, local: true) do |form| %>
+        <div class= "field">
+          <%= form.text_area :review, :class => "form-control" %>
+          <%= form.hidden_field :book_id, :value => @book.id %>
+        </div>
+        <div class="actions">
+          <%= form.submit %>
+        </div>
+       <% end %>
+       </div>
+    </div>
   </div>
-
-  <div class="field">
-     <%= f.label :age %><br />
-     <%= f.number_field :age %>
-  </div>
-  
-  <div class="field">
-    <%= f.label :avatar %>
-    <%= f.file_field :avatar %><br>
-  </div>
-  
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
-
-<%= link_to "Back", :back %>
+</div>
